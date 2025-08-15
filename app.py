@@ -2,9 +2,9 @@
 # -------------------------------------------------------------
 # Site de cadastro e visualização de miniaturas de carros
 # Adaptado para deploy em serviços como Render/Railway
+# Compatível com Flask 3.x
 # -------------------------------------------------------------
 
-from __future__ import annotations
 import os
 from datetime import datetime
 from typing import Optional
@@ -71,12 +71,10 @@ class Miniatura(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
-
 # -------------------------------------
-# Inicialização do banco
+# Inicialização do banco (compatível Flask 3.x)
 # -------------------------------------
-@app.before_first_request
-def init_db():
+with app.app_context():
     db.create_all()
     if not User.query.filter_by(email="admin@miniaturas.local").first():
         admin = User(name="Administrador", email="admin@miniaturas.local", role="admin")
@@ -84,11 +82,9 @@ def init_db():
         db.session.add(admin)
         db.session.commit()
 
-
 @login_manager.user_loader
 def load_user(user_id: str) -> Optional[User]:
     return User.query.get(int(user_id))
-
 
 # -------------------------------------
 # Helpers de permissão
@@ -106,13 +102,11 @@ def role_required(*roles):
         return wrapper
     return decorator
 
-
 def is_owner_or_admin(item_user_id: int) -> bool:
     return current_user.is_authenticated and (current_user.id == item_user_id or current_user.is_admin())
 
-
 # -------------------------------------
-# Templates simples para exibição
+# Templates simples
 # -------------------------------------
 BASE = """
 <!doctype html>
@@ -295,7 +289,7 @@ def apagar_miniatura(m_id):
     return redirect(url_for("listar_miniaturas"))
 
 # -------------------------------------
-# Execução com Waitress (para produção)
+# Execução com Waitress (produção)
 # -------------------------------------
 if __name__ == "__main__":
     from waitress import serve
