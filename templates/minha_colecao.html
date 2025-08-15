@@ -1,1 +1,9 @@
-<h1>Minha Coleção</h1>{% for c in colecao %}<p>{{c.miniatura.nome}}</p>{% endfor %}
+{% extends "base.html" %}
+{% block content %}
+<h2>Minha Coleção</h2>
+<ul>
+{% for c in colecao %}
+    <li>{{c.miniatura.nome}} - {{c.miniatura.tipo}} - {{c.miniatura.cor}}</li>
+{% endfor %}
+</ul>
+{% endblock %}

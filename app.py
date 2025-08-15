@@ -27,6 +27,13 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password, password)
 
+
+class Colecao(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    miniatura_id = db.Column(db.Integer, db.ForeignKey('miniatura.id'), nullable=False)
+    miniatura = db.relationship("Miniatura", backref="colecoes")
+
 class Miniatura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(150))
@@ -117,3 +124,31 @@ if __name__ == "__main__":
     from waitress import serve
     port = int(os.environ.get("PORT", 5000))
     serve(app, host="0.0.0.0", port=port)
+
+@app.route("/buscar", methods=["GET", "POST"])
+@login_required
+def buscar():
+    resultados = []
+    if request.method == "POST":
+        termo = request.form.get("termo")
+        resultados = Miniatura.query.filter(Miniatura.nome.contains(termo)).all()
+    return render_template("buscar.html", resultados=resultados)
+
+@app.route("/adicionar_colecao/<int:miniatura_id>")
+@login_required
+def adicionar_colecao(miniatura_id):
+    ja_tem = Colecao.query.filter_by(user_id=current_user.id, miniatura_id=miniatura_id).first()
+    if not ja_tem:
+        colecao = Colecao(user_id=current_user.id, miniatura_id=miniatura_id)
+        db.session.add(colecao)
+        db.session.commit()
+        flash("Miniatura adicionada à sua coleção!")
+    else:
+        flash("Essa miniatura já está na sua coleção!")
+    return redirect(url_for("buscar"))
+
+@app.route("/minha_colecao")
+@login_required
+def minha_colecao():
+    colecao = Colecao.query.filter_by(user_id=current_user.id).all()
+    return render_template("minha_colecao.html", colecao=colecao)

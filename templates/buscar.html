@@ -1,22 +1,13 @@
 {% extends "base.html" %}
 {% block content %}
 <h2>Buscar Miniaturas</h2>
-<form method="POST" class="mb-3">
-  <input type="text" name="termo" placeholder="Nome" class="form-control mb-2">
-  <button class="btn btn-primary">Buscar</button>
+<form method="post">
+    <input type="text" name="termo" placeholder="Nome">
+    <button type="submit">Buscar</button>
 </form>
-<div class="row">
-{% for m in resultados %}
-  <div class="col-md-4">
-    <div class="card mb-3">
-      {% if m.foto %}<img src="{{ m.foto }}" class="card-img-top">{% endif %}
-      <div class="card-body">
-        <h5 class="card-title">{{ m.nome }}</h5>
-        <p>{{ m.tipo }} | {{ m.marca }} | Cor: {{ m.cor }}</p>
-        <a href="{{ url_for('adicionar_colecao', miniatura_id=m.id) }}" class="btn btn-success">Adicionar à minha coleção</a>
-      </div>
-    </div>
-  </div>
+<ul>
+{% for r in resultados %}
+    <li>{{r.nome}} - {{r.tipo}} - {{r.cor}} <a href="/adicionar_colecao/{{r.id}}">[Adicionar à coleção]</a></li>
 {% endfor %}
-</div>
+</ul>
 {% endblock %}
