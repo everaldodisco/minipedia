@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<h2>Minha Coleção</h2><div class='row'>{% for m in miniaturas %}<div class='col-md-4'><div class='card mb-3'><img src='{{ m.foto }}' class='card-img-top'><div class='card-body'><h5>{{ m.nome }}</h5><p>{{ m.tipo }} - {{ m.marca }} - {{ m.cor }}</p></div></div></div>{% endfor %}</div>{% endblock %}
