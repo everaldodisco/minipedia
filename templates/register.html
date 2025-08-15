@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Cadastrar</h2>
+<form method="post">
+    <label>Nome:</label><br>
+    <input type="text" name="name"><br>
+    <label>Email:</label><br>
+    <input type="email" name="email"><br>
+    <label>Senha:</label><br>
+    <input type="password" name="password"><br>
+    <button type="submit">Criar Conta</button>
+</form>
+{% endblock %}
