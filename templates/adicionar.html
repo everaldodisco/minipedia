@@ -2,35 +2,13 @@
 {% block content %}
 <h2>Adicionar Miniatura</h2>
 <form method="POST">
-  <div class="mb-3">
-    <label class="form-label">Nome</label>
-    <input type="text" name="nome" class="form-control" required>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Marca</label>
-    <input type="text" name="marca" class="form-control" required>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Ano</label>
-    <input type="number" name="ano" class="form-control" required>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Tipo</label>
-    <select name="tipo" class="form-select" required>
-      <option value="Premium">Premium</option>
-      <option value="Mainline">Mainline</option>
-      <option value="STH">STH</option>
-      <option value="Outros">Outros</option>
-    </select>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Lote</label>
-    <input type="text" name="lote" class="form-control">
-  </div>
-  <div class="mb-3">
-    <label class="form-label">URL da Foto</label>
-    <input type="url" name="foto_url" class="form-control">
-  </div>
-  <button type="submit" class="btn btn-primary">Salvar</button>
+  <input type="text" name="nome" placeholder="Nome" class="form-control mb-2" required>
+  <input type="text" name="tipo" placeholder="Tipo" class="form-control mb-2" required>
+  <input type="text" name="lote" placeholder="Lote" class="form-control mb-2">
+  <input type="text" name="marca" placeholder="Marca" class="form-control mb-2">
+  <input type="text" name="cor" placeholder="Cor" class="form-control mb-2">
+  <input type="text" name="foto" placeholder="URL da Foto" class="form-control mb-2">
+  <input type="number" name="ano" placeholder="Ano" class="form-control mb-2">
+  <button class="btn btn-success">Salvar</button>
 </form>
 {% endblock %}

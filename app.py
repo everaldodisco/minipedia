@@ -13,13 +13,19 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 
-# Modelos
+# Tabela associativa para coleção
+colecao_table = db.Table('colecao',
+    db.Column('user_id', db.Integer, db.ForeignKey('user.id')),
+    db.Column('miniatura_id', db.Integer, db.ForeignKey('miniatura.id'))
+)
+
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(150))
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     role = db.Column(db.String(50), default="user")
+    colecao = db.relationship('Miniatura', secondary=colecao_table, backref='colecionadores')
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
@@ -30,11 +36,12 @@ class User(UserMixin, db.Model):
 class Miniatura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     nome = db.Column(db.String(150))
-    marca = db.Column(db.String(150))
-    ano = db.Column(db.Integer)
     tipo = db.Column(db.String(50))
     lote = db.Column(db.String(50))
-    foto_url = db.Column(db.String(300))
+    marca = db.Column(db.String(100))
+    cor = db.Column(db.String(50))
+    foto = db.Column(db.String(250))
+    ano = db.Column(db.Integer)
     usuario_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 @login_manager.user_loader
@@ -50,7 +57,6 @@ with app.app_context():
         db.session.add(admin)
         db.session.commit()
 
-# Rotas
 @app.route("/", methods=["GET", "HEAD"])
 def index():
     miniaturas = Miniatura.query.all()
@@ -97,21 +103,45 @@ def logout():
 def adicionar():
     if request.method == "POST":
         nome = request.form["nome"]
-        marca = request.form["marca"]
-        ano = request.form["ano"]
         tipo = request.form["tipo"]
         lote = request.form["lote"]
-        foto_url = request.form["foto_url"]
+        marca = request.form["marca"]
+        cor = request.form["cor"]
+        foto = request.form["foto"]
+        ano = request.form["ano"]
 
-        nova = Miniatura(
-            nome=nome, marca=marca, ano=ano, tipo=tipo, lote=lote,
-            foto_url=foto_url, usuario_id=current_user.id
-        )
+        nova = Miniatura(nome=nome, tipo=tipo, lote=lote, marca=marca, cor=cor, foto=foto, ano=ano, usuario_id=current_user.id)
         db.session.add(nova)
         db.session.commit()
         flash("Miniatura adicionada com sucesso!", "success")
         return redirect(url_for("index"))
     return render_template("adicionar.html")
+
+@app.route("/buscar", methods=["GET", "POST"])
+@login_required
+def buscar():
+    resultados = []
+    if request.method == "POST":
+        termo = request.form["termo"]
+        resultados = Miniatura.query.filter(Miniatura.nome.contains(termo)).all()
+    return render_template("buscar.html", resultados=resultados)
+
+@app.route("/adicionar_colecao/<int:miniatura_id>")
+@login_required
+def adicionar_colecao(miniatura_id):
+    miniatura = Miniatura.query.get_or_404(miniatura_id)
+    if miniatura not in current_user.colecao:
+        current_user.colecao.append(miniatura)
+        db.session.commit()
+        flash("Miniatura adicionada à sua coleção!", "success")
+    else:
+        flash("Essa miniatura já está na sua coleção!", "warning")
+    return redirect(url_for("minha_colecao"))
+
+@app.route("/minha_colecao")
+@login_required
+def minha_colecao():
+    return render_template("colecao.html", colecao=current_user.colecao)
 
 if __name__ == "__main__":
     from waitress import serve
