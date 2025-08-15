@@ -1,1 +1,1 @@
-{% extends 'base.html' %}{% block content %}<h2>Miniaturas Cadastradas</h2><div class='row'>{% for m in miniaturas %}<div class='col-md-4'><div class='card mb-3'><img src='{{ m.foto }}' class='card-img-top'><div class='card-body'><h5 class='card-title'>{{ m.nome }}</h5><p>{{ m.tipo }} - {{ m.marca }} - {{ m.cor }}</p></div></div></div>{% endfor %}</div>{% endblock %}
+<h1>Miniaturas</h1>{% for m in miniaturas %}<p>{{m.nome}} - {{m.tipo}}</p>{% endfor %}
