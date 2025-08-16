@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Cadastrar Miniatura</h2>
+<form method="POST">
+    <input type="text" name="nome" placeholder="Nome" required><br>
+    <input type="text" name="marca" placeholder="Marca" required><br>
+    <input type="text" name="cor" placeholder="Cor" required><br>
+    <input type="text" name="ano" placeholder="Ano" required><br>
+    <input type="text" name="tipo" placeholder="Tipo" required><br>
+    <input type="text" name="lote" placeholder="Lote"><br>
+    <input type="text" name="escala" placeholder="Escala" required><br>
+    <input type="url" name="url_foto" placeholder="URL da Foto"><br>
+    <button type="submit">Cadastrar</button>
+</form>
+{% endblock %}

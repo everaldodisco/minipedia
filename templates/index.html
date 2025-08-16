@@ -1,22 +1,10 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-<h2>Miniaturas Cadastradas</h2>
-<div class="row">
-{% for m in miniaturas %}
-  <div class="col-md-4">
-    <div class="card mb-3">
-      {% if m.foto_url %}
-      <img src="{{ m.foto_url }}" class="card-img-top" alt="{{ m.nome }}">
-      {% endif %}
-      <div class="card-body">
-        <h5 class="card-title">{{ m.nome }}</h5>
-        <p class="card-text"><strong>Marca:</strong> {{ m.marca }}</p>
-        <p class="card-text"><strong>Ano:</strong> {{ m.ano }}</p>
-        <p class="card-text"><strong>Tipo:</strong> {{ m.tipo }}</p>
-        <p class="card-text"><strong>Lote:</strong> {{ m.lote }}</p>
-      </div>
-    </div>
-  </div>
+<h2>Bem-vindo à Minipedia</h2>
+<p>Veja as miniaturas cadastradas abaixo:</p>
+<ul>
+{% for mini in miniaturas %}
+    <li>{{ mini.nome }} - {{ mini.marca }} ({{ mini.escala }})</li>
 {% endfor %}
-</div>
+</ul>
 {% endblock %}

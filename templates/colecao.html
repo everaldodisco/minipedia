@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Minha Coleção</h2>
+<ul>
+{% for item in colecao %}
+    <li>{{ item.miniatura.nome }} - {{ item.miniatura.marca }} ({{ item.miniatura.escala }})</li>
+{% endfor %}
+</ul>
+{% endblock %}
