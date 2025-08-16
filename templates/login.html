@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Login</h2>
-<form method="POST">
-  <input type="text" name="username" placeholder="Usuário" required class="form-control mb-2">
-  <input type="password" name="password" placeholder="Senha" required class="form-control mb-2">
-  <button type="submit" class="btn btn-success">Entrar</button>
-</form>
+  <h2>Login</h2>
+  <form method="POST">
+    <label>Email:</label><input type="text" name="email"><br>
+    <label>Senha:</label><input type="password" name="password"><br>
+    <button type="submit">Entrar</button>
+  </form>
 {% endblock %}

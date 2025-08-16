@@ -1,17 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Minha Coleção</h2>
-<div class="row">
+  <h2>Minha Coleção</h2>
+  <ul>
   {% for item in itens %}
-  <div class="col-md-4">
-    <div class="card bg-secondary text-light mb-3">
-      <img src="{{ item.miniatura.foto_url }}" class="card-img-top" alt="{{ item.miniatura.nome }}">
-      <div class="card-body">
-        <h5 class="card-title">{{ item.miniatura.nome }}</h5>
-        <p class="card-text">{{ item.miniatura.marca }} | {{ item.miniatura.ano }}</p>
-      </div>
-    </div>
-  </div>
+    <li>{{ item.miniatura.nome }} - {{ item.miniatura.marca }} ({{ item.miniatura.escala }})</li>
   {% endfor %}
-</div>
+  </ul>
 {% endblock %}

@@ -1,5 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Bem-vindo ao Minipedia 🚗</h1>
-<p>Gerencie sua coleção de miniaturas de carros de forma simples!</p>
+  <h1>Bem-vindo à Minipedia</h1>
+  {% if current_user.is_authenticated %}
+    <p>Olá, {{ current_user.username }}!</p>
+  {% else %}
+    <p><a href="{{ url_for('login') }}">Login</a> ou <a href="{{ url_for('register') }}">Cadastre-se</a></p>
+  {% endif %}
 {% endblock %}

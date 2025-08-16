@@ -1,15 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Adicionar Miniatura</h2>
-<form method="POST">
-  <input type="text" name="nome" placeholder="Nome" required class="form-control mb-2">
-  <input type="text" name="marca" placeholder="Marca" required class="form-control mb-2">
-  <input type="text" name="cor" placeholder="Cor" class="form-control mb-2">
-  <input type="text" name="ano" placeholder="Ano" class="form-control mb-2">
-  <input type="text" name="tipo" placeholder="Tipo" class="form-control mb-2">
-  <input type="text" name="lote" placeholder="Lote" class="form-control mb-2">
-  <input type="text" name="escala" placeholder="Escala" class="form-control mb-2">
-  <input type="url" name="foto_url" placeholder="URL da Foto" class="form-control mb-2">
-  <button type="submit" class="btn btn-primary">Salvar</button>
-</form>
+  <h2>Adicionar Miniatura</h2>
+  <form method="POST">
+    Nome: <input type="text" name="nome"><br>
+    Marca: <input type="text" name="marca"><br>
+    Cor: <input type="text" name="cor"><br>
+    Ano: <input type="text" name="ano"><br>
+    Tipo: <input type="text" name="tipo"><br>
+    Lote: <input type="text" name="lote"><br>
+    Escala: <input type="text" name="escala"><br>
+    Foto URL: <input type="text" name="foto_url"><br>
+    <button type="submit">Adicionar</button>
+  </form>
 {% endblock %}
