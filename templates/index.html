@@ -1,20 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Miniaturas</h2>
-<div class="row">
-{% for mini in miniaturas %}
-<div class="col-md-4">
-  <div class="card mb-3">
-    <img src="{{ mini.url_foto }}" class="card-img-top" alt="{{ mini.nome }}">
-    <div class="card-body">
-      <h5 class="card-title">{{ mini.nome }}</h5>
-      <p>{{ mini.marca }} - {{ mini.ano }} - {{ mini.escala }}</p>
-      {% if current_user.is_authenticated %}
-        <a href="{{ url_for('add_colecao', miniatura_id=mini.id) }}" class="btn btn-primary btn-sm">Adicionar à coleção</a>
-      {% endif %}
-    </div>
-  </div>
-</div>
-{% endfor %}
+<div class="text-center">
+    <h1 class="display-5 fw-bold">Bem-vindo à Minipedia</h1>
+    <p class="lead">Sua coleção de miniaturas de carros, organizada e estilosa 🚗✨</p>
 </div>
 {% endblock %}
