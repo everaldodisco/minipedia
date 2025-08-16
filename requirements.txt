@@ -1,7 +1,0 @@
-flask
-flask_sqlalchemy
-flask_login
-werkzeug
-waitress
-
-psycopg2-binary
