@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Minipedia</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="navbar">
+        <a href="{{ url_for('home') }}">Home</a>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('add_car') }}">Adicionar Carro</a>
+            <a href="{{ url_for('logout') }}">Sair</a>
+        {% else %}
+            <a href="{{ url_for('login') }}">Login</a>
+        {% endif %}
+    </div>
+    <div class="container">
+        <h2>Miniaturas de Carros</h2>
+        <ul>
+            {% for car in cars %}
+                <li>{{ car.name }} - {{ car.brand }} (Escala: {{ car.scale }}, Ano: {{ car.year }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
