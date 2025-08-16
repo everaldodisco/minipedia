@@ -1,13 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
-<h2>Buscar Miniaturas</h2>
-<form method="post">
-    <input type="text" name="termo" placeholder="Nome">
-    <button type="submit">Buscar</button>
-</form>
-<ul>
-{% for r in resultados %}
-    <li>{{r.nome}} - {{r.tipo}} - {{r.cor}} <a href="/adicionar_colecao/{{r.id}}">[Adicionar à coleção]</a></li>
-{% endfor %}
-</ul>
+<div class="container mt-4">
+    <h2>Buscar Miniaturas</h2>
+    <form method="post" class="form-inline mb-3">
+        <input type="text" name="termo" class="form-control mr-2" placeholder="Digite o nome">
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </form>
+    <div class="list-group">
+    {% for r in resultados %}
+        <div class="list-group-item d-flex justify-content-between align-items-center">
+            <span>{{r.nome}} - {{r.tipo}} - {{r.cor}}</span>
+            <a href="/adicionar_colecao/{{r.id}}" class="btn btn-success btn-sm">Adicionar à coleção</a>
+        </div>
+    {% endfor %}
+    </div>
+</div>
 {% endblock %}
