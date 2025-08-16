@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Minha Coleção</h2>
+    <ul class="list-group">
+    {% for c in colecao %}
+        <li class="list-group-item">{{c.miniatura.nome}} - {{c.miniatura.tipo}} - {{c.miniatura.cor}}</li>
+    {% endfor %}
+    </ul>
+</div>
+{% endblock %}
