@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>Miniaturas de Carros</h1>
+<ul>
+{% for car in cars %}
+    <li>{{ car.brand }} - {{ car.model }} ({{ car.year }})</li>
+{% endfor %}
+</ul>
+{% endblock %}
