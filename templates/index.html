@@ -1,7 +1,17 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="text-center">
-    <h1 class="display-5 fw-bold">Bem-vindo à Minipedia</h1>
-    <p class="lead">Sua coleção de miniaturas de carros, organizada e estilosa 🚗✨</p>
+<h2>Miniaturas disponíveis</h2>
+<div class="row">
+  {% for mini in miniaturas %}
+  <div class="col-md-3">
+    <div class="card bg-dark text-light mb-3">
+      <img src="{{ mini.url_foto }}" class="card-img-top" alt="{{ mini.nome }}">
+      <div class="card-body">
+        <h5 class="card-title">{{ mini.nome }}</h5>
+        <p class="card-text">{{ mini.marca }} - {{ mini.ano }} - Escala {{ mini.escala }}</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}

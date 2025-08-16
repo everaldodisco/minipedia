@@ -2,14 +2,38 @@
 {% block content %}
 <h2>Adicionar Miniatura</h2>
 <form method="post">
-  <input class="form-control mb-2" name="nome" placeholder="Nome" required>
-  <input class="form-control mb-2" name="marca" placeholder="Marca">
-  <input class="form-control mb-2" name="cor" placeholder="Cor">
-  <input class="form-control mb-2" name="ano" placeholder="Ano">
-  <input class="form-control mb-2" name="tipo" placeholder="Tipo">
-  <input class="form-control mb-2" name="lote" placeholder="Lote">
-  <input class="form-control mb-2" name="escala" placeholder="Escala">
-  <input class="form-control mb-2" name="url_foto" placeholder="URL da Foto">
-  <button class="btn btn-success">Salvar</button>
+  <div class="mb-3">
+    <label class="form-label">Nome</label>
+    <input type="text" name="nome" class="form-control" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Marca</label>
+    <input type="text" name="marca" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Cor</label>
+    <input type="text" name="cor" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Ano</label>
+    <input type="text" name="ano" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Tipo</label>
+    <input type="text" name="tipo" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Lote</label>
+    <input type="text" name="lote" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Escala</label>
+    <input type="text" name="escala" class="form-control">
+  </div>
+  <div class="mb-3">
+    <label class="form-label">URL da Foto</label>
+    <input type="url" name="url_foto" class="form-control">
+  </div>
+  <button type="submit" class="btn btn-primary">Salvar</button>
 </form>
 {% endblock %}
