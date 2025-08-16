@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
     <title>Minipedia</title>
@@ -9,23 +9,22 @@
     <header>
         <h1>🚗 Minipedia</h1>
         <nav>
-            <a href="{{ url_for('index') }}">Home</a>
-            <a href="{{ url_for('miniaturas') }}">Miniaturas</a>
+            <a href="{{ url_for('index') }}">Início</a> |
+            <a href="{{ url_for('add') }}">Cadastrar Miniatura</a> |
+            <a href="{{ url_for('colecao') }}">Minha Coleção</a> |
             {% if current_user.is_authenticated %}
-                <a href="{{ url_for('colecao') }}">Minha Coleção</a>
                 <a href="{{ url_for('logout') }}">Sair</a>
             {% else %}
-                <a href="{{ url_for('login') }}">Login</a>
-                <a href="{{ url_for('register') }}">Registrar</a>
+                <a href="{{ url_for('login') }}">Entrar</a>
             {% endif %}
         </nav>
     </header>
     <main>
-        {% with messages = get_flashed_messages() %}
+        {% with messages = get_flashed_messages(with_categories=true) %}
           {% if messages %}
-            <ul>
-              {% for message in messages %}
-                <li>{{ message }}</li>
+            <ul class="flashes">
+              {% for category, message in messages %}
+                <li class="{{ category }}">{{ message }}</li>
               {% endfor %}
             </ul>
           {% endif %}

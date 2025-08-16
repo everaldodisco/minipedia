@@ -1,1 +1,1 @@
-console.log("Minipedia carregada!");
+console.log('Minipedia carregado!');

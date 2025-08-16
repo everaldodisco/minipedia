@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Cadastrar Miniatura</h2>
+<form method="POST">
+    <label>Nome: <input type="text" name="nome" required></label><br>
+    <label>Marca: <input type="text" name="marca" required></label><br>
+    <label>Cor: <input type="text" name="cor" required></label><br>
+    <label>Ano: <input type="text" name="ano" required></label><br>
+    <label>Tipo: <input type="text" name="tipo" required></label><br>
+    <label>Lote: <input type="text" name="lote" required></label><br>
+    <label>Escala: <input type="text" name="escala" required></label><br>
+    <label>URL da Foto: <input type="text" name="url_foto" required></label><br>
+    <button type="submit">Salvar</button>
+</form>
+{% endblock %}

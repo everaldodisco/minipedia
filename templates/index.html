@@ -1,10 +1,21 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Bem-vindo à Minipedia</h2>
-<p>Veja as miniaturas cadastradas abaixo:</p>
-<ul>
+<h2>Miniaturas cadastradas</h2>
+<div class="grid">
 {% for mini in miniaturas %}
-    <li>{{ mini.nome }} - {{ mini.marca }} ({{ mini.escala }})</li>
+    <div class="card">
+        <img src="{{ mini.url_foto }}" alt="{{ mini.nome }}" width="200">
+        <h3>{{ mini.nome }}</h3>
+        <p><b>Marca:</b> {{ mini.marca }}</p>
+        <p><b>Cor:</b> {{ mini.cor }}</p>
+        <p><b>Ano:</b> {{ mini.ano }}</p>
+        <p><b>Tipo:</b> {{ mini.tipo }}</p>
+        <p><b>Lote:</b> {{ mini.lote }}</p>
+        <p><b>Escala:</b> {{ mini.escala }}</p>
+        {% if current_user.is_authenticated %}
+            <a href="{{ url_for('add_colecao', miniatura_id=mini.id) }}">Adicionar à Coleção</a>
+        {% endif %}
+    </div>
 {% endfor %}
-</ul>
+</div>
 {% endblock %}

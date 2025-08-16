@@ -1,9 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2>Minha Coleção</h2>
-<ul>
+<div class="grid">
 {% for item in colecao %}
-    <li>{{ item.miniatura.nome }} - {{ item.miniatura.marca }} ({{ item.miniatura.escala }})</li>
+    <div class="card">
+        <img src="{{ item.miniatura.url_foto }}" alt="{{ item.miniatura.nome }}" width="200">
+        <h3>{{ item.miniatura.nome }}</h3>
+        <p><b>Marca:</b> {{ item.miniatura.marca }}</p>
+        <p><b>Cor:</b> {{ item.miniatura.cor }}</p>
+        <p><b>Ano:</b> {{ item.miniatura.ano }}</p>
+        <p><b>Tipo:</b> {{ item.miniatura.tipo }}</p>
+        <p><b>Lote:</b> {{ item.miniatura.lote }}</p>
+        <p><b>Escala:</b> {{ item.miniatura.escala }}</p>
+    </div>
 {% endfor %}
-</ul>
+</div>
 {% endblock %}
