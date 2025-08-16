@@ -1,22 +1,17 @@
-
 {% extends 'base.html' %}
 {% block content %}
 <h2>Minha Coleção</h2>
-<div style="display: flex; flex-wrap: wrap;">
-    {% for mini in miniaturas %}
-    <div class="card" style="width: 250px;">
-        <img src="{{ mini.foto_url }}" alt="{{ mini.nome }}" style="width:100%; border-radius: 8px;">
-        <h3>{{ mini.nome }}</h3>
-        <p><strong>Marca:</strong> {{ mini.marca }}</p>
-        <p><strong>Cor:</strong> {{ mini.cor }}</p>
-        <p><strong>Ano:</strong> {{ mini.ano }}</p>
-        <p><strong>Tipo:</strong> {{ mini.tipo }}</p>
-        <p><strong>Lote:</strong> {{ mini.lote }}</p>
-        <p><strong>Escala:</strong> {{ mini.escala }}</p>
-        <form method="POST" action="{{ url_for('remover_miniatura', id=mini.id) }}">
-            <button type="submit" class="btn">Remover</button>
-        </form>
+<div class="row">
+{% for item in colecao %}
+<div class="col-md-4">
+  <div class="card mb-3">
+    <img src="{{ item.miniatura.url_foto }}" class="card-img-top">
+    <div class="card-body">
+      <h5 class="card-title">{{ item.miniatura.nome }}</h5>
+      <p>{{ item.miniatura.marca }} - {{ item.miniatura.ano }}</p>
     </div>
-    {% endfor %}
+  </div>
+</div>
+{% endfor %}
 </div>
 {% endblock %}
