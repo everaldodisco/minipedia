@@ -2,14 +2,16 @@
 {% block content %}
 <h2>Adicionar Miniatura</h2>
 <form method="POST">
-  <div class="mb-3"><label>Nome</label><input class="form-control" name="nome" required></div>
-  <div class="mb-3"><label>Marca</label><input class="form-control" name="marca" required></div>
-  <div class="mb-3"><label>Cor</label><input class="form-control" name="cor"></div>
-  <div class="mb-3"><label>Ano</label><input class="form-control" name="ano"></div>
-  <div class="mb-3"><label>Tipo</label><input class="form-control" name="tipo"></div>
-  <div class="mb-3"><label>Lote</label><input class="form-control" name="lote"></div>
-  <div class="mb-3"><label>Escala</label><input class="form-control" name="escala"></div>
-  <div class="mb-3"><label>URL da Foto</label><input class="form-control" name="foto_url"></div>
-  <button class="btn btn-primary">Salvar</button>
+  <div class="row">
+    <div class="col-md-6 mb-3"><label>Nome</label><input class="form-control" name="nome" required></div>
+    <div class="col-md-6 mb-3"><label>Marca</label><input class="form-control" name="marca" required></div>
+    <div class="col-md-4 mb-3"><label>Cor</label><input class="form-control" name="cor"></div>
+    <div class="col-md-4 mb-3"><label>Ano</label><input class="form-control" name="ano"></div>
+    <div class="col-md-4 mb-3"><label>Tipo</label><input class="form-control" name="tipo"></div>
+    <div class="col-md-6 mb-3"><label>Lote</label><input class="form-control" name="lote"></div>
+    <div class="col-md-6 mb-3"><label>Escala</label><input class="form-control" name="escala"></div>
+    <div class="col-12 mb-3"><label>URL da Foto</label><input class="form-control" name="foto_url"></div>
+  </div>
+  <button class="btn btn-primary">Adicionar</button>
 </form>
 {% endblock %}
