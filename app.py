@@ -1,22 +1,24 @@
 from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'minipedia-secret-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", "sqlite:///minipedia.db").replace("postgres://", "postgresql://")
+app.config['SECRET_KEY'] = 'supersecretkey'
+
+# Configuração somente para PostgreSQL
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
-login_manager.login_view = "login"
+login_manager.login_view = 'login'
 
-class User(db.Model, UserMixin):
+class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    colecao = db.relationship("Colecao", backref="usuario", lazy=True)
+    colecoes = db.relationship('Colecao', backref='owner', lazy=True)
 
 class Miniatura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -25,89 +27,101 @@ class Miniatura(db.Model):
     cor = db.Column(db.String(50), nullable=False)
     ano = db.Column(db.Integer, nullable=False)
     tipo = db.Column(db.String(100), nullable=False)
-    lote = db.Column(db.String(50), nullable=False)
+    lote = db.Column(db.String(100), nullable=False)
     escala = db.Column(db.String(50), nullable=False)
     url_foto = db.Column(db.String(300))
 
 class Colecao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    miniatura_id = db.Column(db.Integer, db.ForeignKey("miniatura.id"), nullable=False)
-    miniatura = db.relationship("Miniatura")
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    miniatura_id = db.Column(db.Integer, db.ForeignKey('miniatura.id'), nullable=False)
+    miniatura = db.relationship('Miniatura')
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-@app.before_request
-def create_tables():
-    db.create_all()
-
-@app.route("/")
+@app.route('/')
 def index():
     miniaturas = Miniatura.query.all()
-    return render_template("index.html", miniaturas=miniaturas)
+    return render_template('index.html', miniaturas=miniaturas)
 
-@app.route("/add", methods=["GET", "POST"])
-@login_required
-def add():
-    if request.method == "POST":
-        mini = Miniatura(
-            nome=request.form["nome"],
-            marca=request.form["marca"],
-            cor=request.form["cor"],
-            ano=request.form["ano"],
-            tipo=request.form["tipo"],
-            lote=request.form["lote"],
-            escala=request.form["escala"],
-            url_foto=request.form["url_foto"]
-        )
-        db.session.add(mini)
-        db.session.commit()
-        flash("Miniatura adicionada com sucesso!", "success")
-        return redirect(url_for("index"))
-    return render_template("add.html")
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        if User.query.filter_by(username=username).first():
+            flash('Usuário já existe!', 'danger')
+        else:
+            user = User(username=username, password=password)
+            db.session.add(user)
+            db.session.commit()
+            flash('Usuário registrado com sucesso!', 'success')
+            return redirect(url_for('login'))
+    return render_template('register.html')
 
-@app.route("/colecao")
-@login_required
-def colecao():
-    colecao = Colecao.query.filter_by(user_id=current_user.id).all()
-    return render_template("colecao.html", colecao=colecao)
-
-@app.route("/add_to_colecao/<int:miniatura_id>")
-@login_required
-def add_to_colecao(miniatura_id):
-    item = Colecao(user_id=current_user.id, miniatura_id=miniatura_id)
-    db.session.add(item)
-    db.session.commit()
-    flash("Miniatura adicionada à sua coleção!", "success")
-    return redirect(url_for("colecao"))
-
-@app.route("/login", methods=["GET", "POST"])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == "POST":
-        user = User.query.filter_by(username=request.form["username"]).first()
-        if user and user.password == request.form["password"]:
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = User.query.filter_by(username=username, password=password).first()
+        if user:
             login_user(user)
-            return redirect(url_for("index"))
-        flash("Usuário ou senha incorretos", "danger")
-    return render_template("login.html")
+            return redirect(url_for('index'))
+        else:
+            flash('Usuário ou senha inválidos', 'danger')
+    return render_template('login.html')
 
-@app.route("/logout")
+@app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for('index'))
 
-@app.route("/register", methods=["GET", "POST"])
-def register():
-    if request.method == "POST":
-        user = User(username=request.form["username"], password=request.form["password"])
-        db.session.add(user)
+@app.route('/add', methods=['GET', 'POST'])
+@login_required
+def add():
+    if request.method == 'POST':
+        mini = Miniatura(
+            nome=request.form['nome'],
+            marca=request.form['marca'],
+            cor=request.form['cor'],
+            ano=request.form['ano'],
+            tipo=request.form['tipo'],
+            lote=request.form['lote'],
+            escala=request.form['escala'],
+            url_foto=request.form['url_foto']
+        )
+        db.session.add(mini)
         db.session.commit()
-        flash("Usuário registrado com sucesso!", "success")
-        return redirect(url_for("login"))
-    return render_template("register.html")
+        flash('Miniatura adicionada com sucesso!', 'success')
+        return redirect(url_for('index'))
+    return render_template('add.html')
+
+@app.route('/colecao')
+@login_required
+def colecao():
+    colecao = Colecao.query.filter_by(user_id=current_user.id).all()
+    return render_template('colecao.html', colecao=colecao)
+
+@app.route('/add_to_colecao/<int:miniatura_id>')
+@login_required
+def add_to_colecao(miniatura_id):
+    existente = Colecao.query.filter_by(user_id=current_user.id, miniatura_id=miniatura_id).first()
+    if existente:
+        flash('Essa miniatura já está na sua coleção!', 'warning')
+    else:
+        nova = Colecao(user_id=current_user.id, miniatura_id=miniatura_id)
+        db.session.add(nova)
+        db.session.commit()
+        flash('Miniatura adicionada à sua coleção!', 'success')
+    return redirect(url_for('colecao'))
+
+with app.app_context():
+    db.create_all()
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    from waitress import serve
+    serve(app, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))

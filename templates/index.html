@@ -1,21 +1,14 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Miniaturas</h1>
-<div class="grid">
-  {% for mini in miniaturas %}
-    <div class="card">
-        <img src="{{ mini.url_foto }}" alt="{{ mini.nome }}" width="200">
-        <h3>{{ mini.nome }}</h3>
-        <p>Marca: {{ mini.marca }}</p>
-        <p>Cor: {{ mini.cor }}</p>
-        <p>Ano: {{ mini.ano }}</p>
-        <p>Tipo: {{ mini.tipo }}</p>
-        <p>Lote: {{ mini.lote }}</p>
-        <p>Escala: {{ mini.escala }}</p>
-        {% if current_user.is_authenticated %}
-            <a href="{{ url_for('add_to_colecao', miniatura_id=mini.id) }}">Adicionar à Coleção</a>
-        {% endif %}
-    </div>
-  {% endfor %}
-</div>
+<h2>Miniaturas</h2>
+<a href="{{ url_for('add') }}">Adicionar nova miniatura</a>
+<ul>
+{% for mini in miniaturas %}
+  <li>{{ mini.nome }} - {{ mini.marca }} - {{ mini.ano }}
+      {% if current_user.is_authenticated %}
+        <a href="{{ url_for('add_to_colecao', miniatura_id=mini.id) }}">[Adicionar à coleção]</a>
+      {% endif %}
+  </li>
+{% endfor %}
+</ul>
 {% endblock %}
