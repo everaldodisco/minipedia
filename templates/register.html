@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2>Cadastro</h2>
-  <form method="POST">
-    <label>Usuário:</label><input type="text" name="username"><br>
-    <label>Email:</label><input type="email" name="email"><br>
-    <label>Senha:</label><input type="password" name="password"><br>
-    <button type="submit">Registrar</button>
-  </form>
+<h2>Registrar</h2>
+<form method="POST">
+  <input type="text" name="username" placeholder="Usuário" required><br>
+  <input type="email" name="email" placeholder="Email" required><br>
+  <input type="password" name="password" placeholder="Senha" required><br>
+  <button type="submit">Registrar</button>
+</form>
 {% endblock %}

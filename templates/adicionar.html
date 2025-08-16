@@ -1,15 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h2>Adicionar Miniatura</h2>
-  <form method="POST">
-    Nome: <input type="text" name="nome"><br>
-    Marca: <input type="text" name="marca"><br>
-    Cor: <input type="text" name="cor"><br>
-    Ano: <input type="text" name="ano"><br>
-    Tipo: <input type="text" name="tipo"><br>
-    Lote: <input type="text" name="lote"><br>
-    Escala: <input type="text" name="escala"><br>
-    Foto URL: <input type="text" name="foto_url"><br>
-    <button type="submit">Adicionar</button>
-  </form>
+<h2>Adicionar Miniatura</h2>
+<form method="POST">
+  <input type="text" name="nome" placeholder="Nome" required><br>
+  <input type="text" name="marca" placeholder="Marca" required><br>
+  <input type="text" name="ano" placeholder="Ano" required><br>
+  <input type="text" name="escala" placeholder="Escala" required><br>
+  <button type="submit">Adicionar</button>
+</form>
 {% endblock %}

@@ -1,9 +1,11 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h1>Bem-vindo à Minipedia</h1>
-  {% if current_user.is_authenticated %}
-    <p>Olá, {{ current_user.username }}!</p>
+<h1>Miniaturas</h1>
+<ul>
+  {% for m in miniaturas %}
+    <li>{{ m.nome }} - {{ m.marca }} - {{ m.ano }} - {{ m.escala }}</li>
   {% else %}
-    <p><a href="{{ url_for('login') }}">Login</a> ou <a href="{{ url_for('register') }}">Cadastre-se</a></p>
-  {% endif %}
+    <li>Nenhuma miniatura cadastrada.</li>
+  {% endfor %}
+</ul>
 {% endblock %}
