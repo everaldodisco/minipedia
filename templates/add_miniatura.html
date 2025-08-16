@@ -1,15 +1,15 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<h2>Cadastrar Miniatura</h2>
+<h2>Adicionar Miniatura</h2>
 <form method="POST">
-    <input type="text" name="nome" placeholder="Nome" required><br>
-    <input type="text" name="marca" placeholder="Marca" required><br>
-    <input type="text" name="cor" placeholder="Cor" required><br>
-    <input type="text" name="ano" placeholder="Ano" required><br>
-    <input type="text" name="tipo" placeholder="Tipo" required><br>
-    <input type="text" name="lote" placeholder="Lote"><br>
-    <input type="text" name="escala" placeholder="Escala" required><br>
-    <input type="url" name="url_foto" placeholder="URL da Foto"><br>
-    <button type="submit">Cadastrar</button>
+  <div class="mb-3"><label>Nome</label><input type="text" name="nome" class="form-control" required></div>
+  <div class="mb-3"><label>Marca</label><input type="text" name="marca" class="form-control" required></div>
+  <div class="mb-3"><label>Cor</label><input type="text" name="cor" class="form-control"></div>
+  <div class="mb-3"><label>Ano</label><input type="number" name="ano" class="form-control"></div>
+  <div class="mb-3"><label>Tipo</label><input type="text" name="tipo" class="form-control"></div>
+  <div class="mb-3"><label>Lote</label><input type="text" name="lote" class="form-control"></div>
+  <div class="mb-3"><label>Escala</label><input type="text" name="escala" class="form-control"></div>
+  <div class="mb-3"><label>URL da Foto</label><input type="url" name="url_foto" class="form-control"></div>
+  <button type="submit" class="btn btn-success">Adicionar</button>
 </form>
 {% endblock %}

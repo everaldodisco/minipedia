@@ -1,126 +1,119 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
+from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
+from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
-import os
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'minipedia-secret-key'
-app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", "sqlite:///miniaturas.db")
+app.config['SECRET_KEY'] = 'minipedia_secret'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/minipedia'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
-login_manager = LoginManager(app)
-login_manager.login_view = "login"
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
-# ---------------- MODELOS ----------------
+# ----------------- MODELOS -----------------
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
+    email = db.Column(db.String(150), unique=True, nullable=False)
     password = db.Column(db.String(150), nullable=False)
-    miniaturas = db.relationship("Miniatura", secondary="colecao", back_populates="colecionadores")
 
 class Miniatura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(150), nullable=False)
-    marca = db.Column(db.String(100))
+    nome = db.Column(db.String(100), nullable=False)
+    marca = db.Column(db.String(100), nullable=False)
     cor = db.Column(db.String(50))
-    ano = db.Column(db.String(10))
-    tipo = db.Column(db.String(100))
+    ano = db.Column(db.Integer)
+    tipo = db.Column(db.String(50))
     lote = db.Column(db.String(50))
-    escala = db.Column(db.String(50))
+    escala = db.Column(db.String(20))
     url_foto = db.Column(db.String(300))
-    colecionadores = db.relationship("User", secondary="colecao", back_populates="miniaturas")
 
 class Colecao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
-    miniatura_id = db.Column(db.Integer, db.ForeignKey("miniatura.id"))
-    __table_args__ = (db.UniqueConstraint("user_id", "miniatura_id", name="uq_user_miniatura"),)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    miniatura_id = db.Column(db.Integer, db.ForeignKey('miniatura.id'))
+    __table_args__ = (db.UniqueConstraint('user_id', 'miniatura_id', name='_user_miniatura_uc'),)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-# ---------------- ROTAS ----------------
-@app.route("/")
+# ----------------- ROTAS -----------------
+@app.route('/')
 def index():
     miniaturas = Miniatura.query.all()
-    return render_template("index.html", miniaturas=miniaturas)
+    return render_template('index.html', miniaturas=miniaturas)
 
-@app.route("/register", methods=["GET", "POST"])
+@app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        if User.query.filter_by(username=username).first():
-            flash("Usuário já existe.", "danger")
-            return redirect(url_for("register"))
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
         hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
-        new_user = User(username=username, password=hashed_password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash("Cadastro realizado com sucesso!", "success")
-        return redirect(url_for("login"))
-    return render_template("register.html")
+        new_user = User(email=email, password=hashed_password)
+        try:
+            db.session.add(new_user)
+            db.session.commit()
+            flash("Usuário registrado com sucesso!", "success")
+            return redirect(url_for('login'))
+        except:
+            flash("Erro: esse email já está registrado!", "danger")
+    return render_template('register.html')
 
-@app.route("/login", methods=["GET", "POST"])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
-    if request.method == "POST":
-        username = request.form.get("username")
-        password = request.form.get("password")
-        user = User.query.filter_by(username=username).first()
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
         if user and check_password_hash(user.password, password):
             login_user(user)
-            return redirect(url_for("index"))
+            return redirect(url_for('index'))
         else:
-            flash("Usuário ou senha inválidos.", "danger")
-    return render_template("login.html")
+            flash("Credenciais inválidas", "danger")
+    return render_template('login.html')
 
-@app.route("/logout")
+@app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for("index"))
+    return redirect(url_for('index'))
 
-@app.route("/add", methods=["GET", "POST"])
+@app.route('/add_miniatura', methods=['GET', 'POST'])
 @login_required
-def add():
-    if request.method == "POST":
-        mini = Miniatura(
-            nome=request.form.get("nome"),
-            marca=request.form.get("marca"),
-            cor=request.form.get("cor"),
-            ano=request.form.get("ano"),
-            tipo=request.form.get("tipo"),
-            lote=request.form.get("lote"),
-            escala=request.form.get("escala"),
-            url_foto=request.form.get("url_foto"),
-        )
-        db.session.add(mini)
-        db.session.commit()
-        flash("Miniatura adicionada com sucesso!", "success")
-        return redirect(url_for("index"))
-    return render_template("add.html")
+def add_miniatura():
+    if request.method == 'POST':
+        nome = request.form['nome']
+        marca = request.form['marca']
+        cor = request.form['cor']
+        ano = request.form['ano']
+        tipo = request.form['tipo']
+        lote = request.form['lote']
+        escala = request.form['escala']
+        url_foto = request.form['url_foto']
 
-@app.route("/colecao")
-@login_required
-def colecao():
-    return render_template("colecao.html", miniaturas=current_user.miniaturas)
+        existente = Miniatura.query.filter_by(nome=nome, marca=marca).first()
+        if existente:
+            flash("Essa miniatura já está cadastrada!", "warning")
+        else:
+            mini = Miniatura(nome=nome, marca=marca, cor=cor, ano=ano, tipo=tipo,
+                             lote=lote, escala=escala, url_foto=url_foto)
+            db.session.add(mini)
+            db.session.commit()
+            flash("Miniatura adicionada com sucesso!", "success")
+            return redirect(url_for('index'))
+    return render_template('add_miniatura.html')
 
-@app.route("/add_to_colecao/<int:miniatura_id>")
-@login_required
-def add_to_colecao(miniatura_id):
-    mini = Miniatura.query.get_or_404(miniatura_id)
-    if mini not in current_user.miniaturas:
-        current_user.miniaturas.append(mini)
-        db.session.commit()
-        flash("Miniatura adicionada à sua coleção!", "success")
-    else:
-        flash("Essa miniatura já está na sua coleção!", "warning")
-    return redirect(url_for("colecao"))
-
-if __name__ == "__main__":
-    with app.app_context():
+@app.route('/resetdb')
+def reset_db():
+    try:
+        db.drop_all()
         db.create_all()
+        return "✅ Banco de dados resetado e recriado com sucesso!"
+    except Exception as e:
+        return f"❌ Erro ao resetar o banco: {str(e)}"
+
+if __name__ == '__main__':
     app.run(debug=True)

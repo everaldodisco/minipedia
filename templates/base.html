@@ -1,25 +1,41 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Minipedia</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body { background-color: #121212; color: #e0e0e0; }
+        .navbar { background-color: #1f1f1f; }
+        .card { background-color: #1e1e1e; border: none; }
+        a, .nav-link, .navbar-brand { color: #e0e0e0 !important; }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
-        <div class="logo"><i class="fas fa-car"></i> Minipedia</div>
-        <div>
-            <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Início</a>
-            <a href="{{ url_for('add') }}"><i class="fas fa-plus-circle"></i> Adicionar</a>
-            <a href="{{ url_for('colecao') }}"><i class="fas fa-box"></i> Coleção</a>
-            <a href="{{ url_for('logout') }}"><i class="fas fa-sign-out-alt"></i> Sair</a>
-        </div>
-    </nav>
-    <div class="container">
-        {% block content %}{% endblock %}
+<nav class="navbar navbar-expand-lg">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/"><i class="fa-solid fa-car"></i> Minipedia</a>
+    <div class="collapse navbar-collapse">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link" href="/"><i class="fa fa-home"></i> Início</a></li>
+        <li class="nav-item"><a class="nav-link" href="/add_miniatura"><i class="fa fa-plus-circle"></i> Adicionar Miniatura</a></li>
+        <li class="nav-item"><a class="nav-link" href="/register"><i class="fa fa-user-plus"></i> Registrar</a></li>
+        <li class="nav-item"><a class="nav-link" href="/login"><i class="fa fa-sign-in-alt"></i> Login</a></li>
+        <li class="nav-item"><a class="nav-link" href="/logout"><i class="fa fa-sign-out-alt"></i> Logout</a></li>
+      </ul>
     </div>
+  </div>
+</nav>
+<div class="container mt-4">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+</div>
 </body>
 </html>
