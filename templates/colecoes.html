@@ -1,1 +1,0 @@
-<h2>Coleções</h2><form method='post'><input name='nome'><textarea name='descricao'></textarea><button type='submit'>Adicionar</button></form>{% for c in colecoes %}<p>{{c.nome}} - <a href='/miniaturas/{{c.id}}'>Ver Miniaturas</a></p>{% endfor %}
