@@ -1,15 +1,16 @@
+
 {% extends 'base.html' %}
 {% block content %}
 <h2>Adicionar Miniatura</h2>
-<form method="post">
-  <div class="mb-3"><label class="form-label">Nome</label><input name="nome" class="form-control"></div>
-  <div class="mb-3"><label class="form-label">Marca</label><input name="marca" class="form-control"></div>
-  <div class="mb-3"><label class="form-label">Cor</label><input name="cor" class="form-control"></div>
-  <div class="mb-3"><label class="form-label">Ano</label><input name="ano" class="form-control"></div>
-  <div class="mb-3"><label class="form-label">Tipo</label><input name="tipo" class="form-control"></div>
-  <div class="mb-3"><label class="form-label">Lote</label><input name="lote" class="form-control"></div>
-  <div class="mb-3"><label class="form-label">Escala</label><input name="escala" class="form-control"></div>
-  <div class="mb-3"><label class="form-label">URL da Foto</label><input name="url_foto" class="form-control"></div>
-  <button type="submit" class="btn btn-success">Adicionar</button>
+<form method="POST" class="card">
+    <label>Nome:</label><input type="text" name="nome" required><br>
+    <label>Marca:</label><input type="text" name="marca" required><br>
+    <label>Cor:</label><input type="text" name="cor" required><br>
+    <label>Ano:</label><input type="number" name="ano" required><br>
+    <label>Tipo:</label><input type="text" name="tipo" required><br>
+    <label>Lote:</label><input type="text" name="lote"><br>
+    <label>Escala:</label><input type="text" name="escala"><br>
+    <label>URL da Foto:</label><input type="url" name="foto_url"><br>
+    <button type="submit">Salvar</button>
 </form>
 {% endblock %}
