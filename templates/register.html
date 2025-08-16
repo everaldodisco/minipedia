@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 {% block content %}
 <h2>Registrar</h2>
-<form method="post">
-  <input class="form-control mb-2" name="username" placeholder="Usuário" required>
-  <input class="form-control mb-2" name="password" type="password" placeholder="Senha" required>
-  <button class="btn btn-success">Registrar</button>
+<form method="POST">
+  <div class="mb-3">
+    <label>Usuário</label>
+    <input class="form-control" type="text" name="username" required>
+  </div>
+  <div class="mb-3">
+    <label>Senha</label>
+    <input class="form-control" type="password" name="password" required>
+  </div>
+  <button class="btn btn-success" type="submit">Cadastrar</button>
 </form>
 {% endblock %}
