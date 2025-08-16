@@ -1,49 +1,19 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="row g-3 align-items-end mb-4">
-  <div class="col-12">
-    <h2 class="h4">Minha coleção</h2>
-  </div>
-  <form class="row g-2" method="post" action="{{ url_for('add_car') }}">
-    <div class="col-md-4">
-      <label class="form-label">Marca</label>
-      <input class="form-control" name="brand" required>
-    </div>
-    <div class="col-md-4">
-      <label class="form-label">Modelo</label>
-      <input class="form-control" name="model" required>
-    </div>
-    <div class="col-md-2">
-      <label class="form-label">Ano</label>
-      <input class="form-control" name="year" required>
-    </div>
-    <div class="col-md-2 d-grid">
-      <label class="form-label invisible">.</label>
-      <button class="btn btn-success">Adicionar</button>
-    </div>
-  </form>
-</div>
+{% extends "base.html" %}
 
-<div class="table-responsive">
-  <table class="table table-striped align-middle">
-    <thead>
-      <tr><th>#</th><th>Marca</th><th>Modelo</th><th>Ano</th><th style="width:130px">Ações</th></tr>
-    </thead>
-    <tbody>
-      {% for c in cars %}
-      <tr>
-        <td>{{ c.id }}</td>
-        <td>{{ c.brand }}</td>
-        <td>{{ c.model }}</td>
-        <td>{{ c.year }}</td>
-        <td>
-          <a class="btn btn-sm btn-outline-danger" href="{{ url_for('delete_car', car_id=c.id) }}" onclick="return confirm('Remover este carro?')">Remover</a>
-        </td>
-      </tr>
-      {% else %}
-      <tr><td colspan="5" class="text-muted">Nenhum carro ainda. Adicione acima.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+{% block content %}
+<h2>Minha Coleção</h2>
+<div class="row">
+    {% for car in cars %}
+        <div class="col-md-4 mb-3">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ car.brand }} - {{ car.model }}</h5>
+                    <p class="card-text">Ano: {{ car.year }}</p>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <p>Nenhum carro na coleção ainda.</p>
+    {% endfor %}
 </div>
 {% endblock %}

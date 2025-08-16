@@ -1,28 +1,18 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
+
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6 col-lg-5">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="h4 mb-3">Cadastro</h2>
-        <form method="post">
-          <div class="mb-3">
-            <label class="form-label">Nome</label>
-            <input type="text" class="form-control" name="name" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">E-mail</label>
-            <input type="email" class="form-control" name="email" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Senha</label>
+<div class="card p-4 shadow">
+    <h2 class="mb-3">Registrar</h2>
+    <form method="POST">
+        <div class="mb-3">
+            <label for="username" class="form-label">Usuário</label>
+            <input type="text" class="form-control" name="username" required>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">Senha</label>
             <input type="password" class="form-control" name="password" required>
-          </div>
-          <button class="btn btn-primary">Cadastrar</button>
-          <a class="btn btn-link" href="{{ url_for('login') }}">Já tenho conta</a>
-        </form>
-      </div>
-    </div>
-  </div>
+        </div>
+        <button type="submit" class="btn btn-success w-100">Registrar</button>
+    </form>
 </div>
 {% endblock %}

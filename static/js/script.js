@@ -1,0 +1,1 @@
+console.log('Minipedia funcionando!');
