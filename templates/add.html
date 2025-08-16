@@ -2,14 +2,14 @@
 {% block content %}
 <h2>Cadastrar Miniatura</h2>
 <form method="POST">
-    <label>Nome: <input type="text" name="nome" required></label><br>
-    <label>Marca: <input type="text" name="marca" required></label><br>
-    <label>Cor: <input type="text" name="cor" required></label><br>
-    <label>Ano: <input type="text" name="ano" required></label><br>
-    <label>Tipo: <input type="text" name="tipo" required></label><br>
-    <label>Lote: <input type="text" name="lote" required></label><br>
-    <label>Escala: <input type="text" name="escala" required></label><br>
-    <label>URL da Foto: <input type="text" name="url_foto" required></label><br>
-    <button type="submit">Salvar</button>
+    <input type="text" name="nome" placeholder="Nome" required><br>
+    <input type="text" name="marca" placeholder="Marca" required><br>
+    <input type="text" name="cor" placeholder="Cor" required><br>
+    <input type="number" name="ano" placeholder="Ano" required><br>
+    <input type="text" name="tipo" placeholder="Tipo" required><br>
+    <input type="text" name="lote" placeholder="Lote" required><br>
+    <input type="text" name="escala" placeholder="Escala" required><br>
+    <input type="url" name="url_foto" placeholder="URL da Foto"><br>
+    <button type="submit">Cadastrar</button>
 </form>
 {% endblock %}
