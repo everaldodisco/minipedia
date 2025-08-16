@@ -1,17 +1,18 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Sua Coleção</h2>
+<h2>Minha Coleção</h2>
 <div class="row">
-  {% for mini in minis %}
-  <div class="col-md-3">
-    <div class="card bg-secondary text-light mb-3">
-      <img src="{{ mini.url_foto }}" class="card-img-top" alt="{{ mini.nome }}">
+{% for item in itens %}
+  <div class="col-md-4">
+    <div class="card mb-3">
+      <img src="{{ item.miniatura.foto_url }}" class="card-img-top" alt="Miniatura">
       <div class="card-body">
-        <h5 class="card-title">{{ mini.nome }}</h5>
-        <p>{{ mini.marca }} - {{ mini.ano }}</p>
+        <h5 class="card-title">{{ item.miniatura.nome }}</h5>
+        <p class="card-text">Marca: {{ item.miniatura.marca }} | Cor: {{ item.miniatura.cor }}</p>
+        <p class="card-text">Ano: {{ item.miniatura.ano }} | Escala: {{ item.miniatura.escala }}</p>
       </div>
     </div>
   </div>
-  {% endfor %}
+{% endfor %}
 </div>
 {% endblock %}

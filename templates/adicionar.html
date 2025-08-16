@@ -1,36 +1,15 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
 <h2>Adicionar Miniatura</h2>
 <form method="POST">
-  <div class="mb-3">
-    <label class="form-label">Nome</label>
-    <input type="text" name="nome" class="form-control" required>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Marca</label>
-    <input type="text" name="marca" class="form-control" required>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Ano</label>
-    <input type="number" name="ano" class="form-control" required>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Tipo</label>
-    <select name="tipo" class="form-select" required>
-      <option value="Premium">Premium</option>
-      <option value="Mainline">Mainline</option>
-      <option value="STH">STH</option>
-      <option value="Outros">Outros</option>
-    </select>
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Lote</label>
-    <input type="text" name="lote" class="form-control">
-  </div>
-  <div class="mb-3">
-    <label class="form-label">URL da Foto</label>
-    <input type="url" name="foto_url" class="form-control">
-  </div>
-  <button type="submit" class="btn btn-primary">Salvar</button>
+  <input type="text" name="nome" class="form-control mb-2" placeholder="Nome" required>
+  <input type="text" name="marca" class="form-control mb-2" placeholder="Marca" required>
+  <input type="text" name="cor" class="form-control mb-2" placeholder="Cor">
+  <input type="text" name="ano" class="form-control mb-2" placeholder="Ano">
+  <input type="text" name="tipo" class="form-control mb-2" placeholder="Tipo">
+  <input type="text" name="lote" class="form-control mb-2" placeholder="Lote">
+  <input type="text" name="escala" class="form-control mb-2" placeholder="Escala">
+  <input type="url" name="foto_url" class="form-control mb-2" placeholder="URL da Foto">
+  <button type="submit" class="btn btn-success">Adicionar</button>
 </form>
 {% endblock %}

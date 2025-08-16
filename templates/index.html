@@ -1,17 +1,5 @@
 {% extends 'base.html' %}
 {% block content %}
-<h2>Miniaturas disponíveis</h2>
-<div class="row">
-  {% for mini in miniaturas %}
-  <div class="col-md-3">
-    <div class="card bg-dark text-light mb-3">
-      <img src="{{ mini.url_foto }}" class="card-img-top" alt="{{ mini.nome }}">
-      <div class="card-body">
-        <h5 class="card-title">{{ mini.nome }}</h5>
-        <p class="card-text">{{ mini.marca }} - {{ mini.ano }} - Escala {{ mini.escala }}</p>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
+  <h1 class="text-center">Bem-vindo ao Minipedia 🚘</h1>
+  <p class="text-center">Gerencie suas miniaturas de forma fácil e divertida.</p>
 {% endblock %}
