@@ -1,14 +1,22 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-  <div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container py-5">
-      <h1 class="display-6 fw-bold">Bem-vindo à Minipedia</h1>
-      <p class="col-md-8 fs-5">Gerencie sua coleção de miniaturas de carros com facilidade.</p>
-      {% if not current_user.is_authenticated %}
-        <a class="btn btn-primary btn-lg" href="{{ url_for('login') }}">Começar</a>
-      {% else %}
-        <a class="btn btn-primary btn-lg" href="{{ url_for('colecao') }}">Ver minha coleção</a>
+<h2>Miniaturas Cadastradas</h2>
+<div class="row">
+{% for m in miniaturas %}
+  <div class="col-md-4">
+    <div class="card mb-3">
+      {% if m.foto_url %}
+      <img src="{{ m.foto_url }}" class="card-img-top" alt="{{ m.nome }}">
       {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">{{ m.nome }}</h5>
+        <p class="card-text"><strong>Marca:</strong> {{ m.marca }}</p>
+        <p class="card-text"><strong>Ano:</strong> {{ m.ano }}</p>
+        <p class="card-text"><strong>Tipo:</strong> {{ m.tipo }}</p>
+        <p class="card-text"><strong>Lote:</strong> {{ m.lote }}</p>
+      </div>
     </div>
   </div>
+{% endfor %}
+</div>
 {% endblock %}

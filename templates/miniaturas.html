@@ -1,1 +1,0 @@
-<h2>Miniaturas da Coleção {{colecao.nome}}</h2><form method='post'><input name='modelo'><input name='marca'><input name='ano'><input name='escala'><button type='submit'>Adicionar</button></form>{% for m in miniaturas %}<p>{{m.modelo}} ({{m.marca}}, {{m.ano}}) - Escala {{m.escala}}</p>{% endfor %}

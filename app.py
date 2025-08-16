@@ -1,259 +1,119 @@
-from flask import Flask, render_template, redirect, url_for, request, flash
-from flask_sqlalchemy import SQLAlchemy
-<<<<<<< HEAD
-from flask_login import (
-    LoginManager,
-    UserMixin,
-    login_user,
-    logout_user,
-    login_required,
-    current_user,
-)
-from werkzeug.security import generate_password_hash, check_password_hash
 import os
-
-app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY", "supersecret")
-
-# Config do banco
-app.config["SQLALCHEMY_DATABASE_URI"] = os.getenv("DATABASE_URL", "sqlite:///minipedia.db")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-
-# Ajuste para compatibilidade com o PostgreSQL no Render
-if app.config["SQLALCHEMY_DATABASE_URI"].startswith("postgres://"):
-    app.config["SQLALCHEMY_DATABASE_URI"] = app.config["SQLALCHEMY_DATABASE_URI"].replace(
-        "postgres://", "postgresql://", 1
-    )
-
-# DB + Login
-=======
+from flask import Flask, render_template, request, redirect, url_for, flash
+from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'supersecretkey'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///minipedia.db'
->>>>>>> 12a4e9b (Ajustes no projeto Minipedia)
-db = SQLAlchemy(app)
+app.config['SECRET_KEY'] = 'secret-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///miniaturas.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-login_manager = LoginManager()
-login_manager.init_app(app)
+db = SQLAlchemy(app)
+login_manager = LoginManager(app)
 login_manager.login_view = "login"
 
-<<<<<<< HEAD
-# ---------------------
-# MODELOS
-# ---------------------
+# Modelos
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)  # espaço suficiente p/ hash scrypt
-    role = db.Column(db.String(20), default="user")
+    name = db.Column(db.String(150))
+    email = db.Column(db.String(150), unique=True)
+    password = db.Column(db.String(150))
+    role = db.Column(db.String(50), default="user")
 
-class Car(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    brand = db.Column(db.String(100), nullable=False)
-    model = db.Column(db.String(100), nullable=False)
-    year = db.Column(db.Integer, nullable=False)
-=======
-class User(UserMixin, db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(150), nullable=False)
+    def set_password(self, password):
+        self.password = generate_password_hash(password)
 
-class Car(db.Model):
+    def check_password(self, password):
+        return check_password_hash(self.password, password)
+
+class Miniatura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    brand = db.Column(db.String(100))
-    model = db.Column(db.String(100))
-    year = db.Column(db.Integer)
->>>>>>> 12a4e9b (Ajustes no projeto Minipedia)
+    nome = db.Column(db.String(150))
+    marca = db.Column(db.String(150))
+    ano = db.Column(db.Integer)
+    tipo = db.Column(db.String(50))
+    lote = db.Column(db.String(50))
+    foto_url = db.Column(db.String(300))
+    usuario_id = db.Column(db.Integer, db.ForeignKey('user.id'))
 
 @login_manager.user_loader
 def load_user(user_id):
-    return db.session.get(User, int(user_id))
+    return User.query.get(int(user_id))
 
-<<<<<<< HEAD
-# ---------------------
-# SETUP INICIAL (tabelas + admin)
-# ---------------------
+# Inicializar DB e criar admin
 with app.app_context():
     db.create_all()
-    # cria admin padrão se não existir
     if not User.query.filter_by(email="admin@miniaturas.local").first():
-        admin = User(
-            name="Administrador",
-            email="admin@miniaturas.local",
-            password=generate_password_hash("admin", method="scrypt"),
-            role="admin",
-        )
+        admin = User(name="Administrador", email="admin@miniaturas.local", role="admin")
+        admin.set_password("admin123")
         db.session.add(admin)
         db.session.commit()
-        print("👤 Usuário admin criado: admin@miniaturas.local / admin")
 
-# ---------------------
-# ROTAS PÚBLICAS
-# ---------------------
-@app.route("/")
+# Rotas
+@app.route("/", methods=["GET", "HEAD"])
 def index():
-    return render_template("index.html")
+    miniaturas = Miniatura.query.all()
+    return render_template("index.html", miniaturas=miniaturas)
 
-@app.route("/home")
-def home():
-    return redirect(url_for("index"))
-
-@app.route("/health")
-def health():
-    return {"status": "ok"}
-
-# ---------------------
-# AUTENTICAÇÃO
-# ---------------------
-@app.route("/login", methods=["GET", "POST"])
+@app.route("/login", methods=["GET", "POST", "HEAD"])
 def login():
     if request.method == "POST":
-        email = request.form.get("email", "").strip().lower()
-        password = request.form.get("password", "")
+        email = request.form["email"]
+        password = request.form["password"]
         user = User.query.filter_by(email=email).first()
-        if user and check_password_hash(user.password, password):
+        if user and user.check_password(password):
             login_user(user)
-            flash("Login realizado com sucesso!", "success")
             return redirect(url_for("index"))
-        flash("Credenciais inválidas!", "danger")
+        flash("Usuário ou senha inválidos", "danger")
     return render_template("login.html")
 
-@app.route("/logout")
-@login_required
-def logout():
-    logout_user()
-    flash("Logout realizado com sucesso!", "info")
-    return redirect(url_for("index"))
-
-@app.route("/register", methods=["GET", "POST"])
+@app.route("/register", methods=["GET", "POST", "HEAD"])
 def register():
-    if request.method == "POST"]:
-        name = request.form.get("name", "").strip()
-        email = request.form.get("email", "").strip().lower()
-        raw_password = request.form.get("password", "")
-
-        if not name or not email or not raw_password:
-            flash("Preencha todos os campos.", "warning")
-            return render_template("register.html")
+    if request.method == "POST":
+        name = request.form["name"]
+        email = request.form["email"]
+        password = request.form["password"]
 
         if User.query.filter_by(email=email).first():
-            flash("E-mail já registrado!", "danger")
+            flash("E-mail já cadastrado", "danger")
         else:
-            password_hash = generate_password_hash(raw_password, method="scrypt")
-            new_user = User(name=name, email=email, password=password_hash)
-            db.session.add(new_user)
+            user = User(name=name, email=email)
+            user.set_password(password)
+            db.session.add(user)
             db.session.commit()
-            flash("Cadastro realizado com sucesso! Faça login.", "success")
+            flash("Conta criada com sucesso", "success")
             return redirect(url_for("login"))
     return render_template("register.html")
 
-# ---------------------
-# COLEÇÃO (PROTEGIDA)
-# ---------------------
-@app.route("/colecao")
-@login_required
-def colecao():
-    cars = Car.query.order_by(Car.brand, Car.model).all()
-    return render_template("colecao.html", cars=cars)
-
-@app.route("/colecao/add", methods=["POST"])
-@login_required
-def add_car():
-    brand = request.form.get("brand", "").strip()
-    model = request.form.get("model", "").strip()
-    year = request.form.get("year", "").strip()
-
-    if not brand or not model or not year.isdigit():
-        flash("Informe marca, modelo e ano (número).", "warning")
-        return redirect(url_for("colecao"))
-
-    car = Car(brand=brand, model=model, year=int(year))
-    db.session.add(car)
-    db.session.commit()
-    flash("Carro adicionado!", "success")
-    return redirect(url_for("colecao"))
-
-@app.route("/colecao/delete/<int:car_id>")
-@login_required
-def delete_car(car_id):
-    car = db.session.get(Car, car_id)
-    if car:
-        db.session.delete(car)
-        db.session.commit()
-        flash("Carro removido!", "info")
-    else:
-        flash("Carro não encontrado.", "warning")
-    return redirect(url_for("colecao"))
-
-# ---------------------
-# ERROS
-# ---------------------
-@app.errorhandler(404)
-def not_found(e):
-    return render_template("base.html", content="Página não encontrada."), 404
-
-@app.errorhandler(500)
-def server_error(e):
-    return render_template("base.html", content="Erro interno do servidor."), 500
-
-# ---------------------
-# MAIN
-# ---------------------
-if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=int(os.getenv("PORT", 5000)))
-=======
-@app.route('/')
-def index():
-    return render_template('index.html')
-
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = User.query.filter_by(username=username).first()
-        if user and user.password == password:
-            login_user(user)
-            return redirect(url_for('index'))
-        flash('Login inválido')
-    return render_template('login.html')
-
-@app.route('/logout')
+@app.route("/logout", methods=["GET", "HEAD"])
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for("index"))
 
-@app.route('/register', methods=['GET', 'POST'])
-def register():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        if User.query.filter_by(username=username).first():
-            flash('Usuário já existe')
-            return redirect(url_for('register'))
-        new_user = User(username=username, password=password)
-        db.session.add(new_user)
-        db.session.commit()
-        flash('Usuário registrado com sucesso!')
-        return redirect(url_for('login'))
-    return render_template('register.html')
-
-@app.route('/colecao')
+@app.route("/adicionar", methods=["GET", "POST", "HEAD"])
 @login_required
-def colecao():
-    cars = Car.query.all()
-    return render_template('colecao.html', cars=cars)
+def adicionar():
+    if request.method == "POST":
+        nome = request.form["nome"]
+        marca = request.form["marca"]
+        ano = request.form["ano"]
+        tipo = request.form["tipo"]
+        lote = request.form["lote"]
+        foto_url = request.form["foto_url"]
 
-@app.route('/sobre')
-def sobre():
-    return render_template('sobre.html')
+        nova = Miniatura(
+            nome=nome, marca=marca, ano=ano, tipo=tipo, lote=lote,
+            foto_url=foto_url, usuario_id=current_user.id
+        )
+        db.session.add(nova)
+        db.session.commit()
+        flash("Miniatura adicionada com sucesso!", "success")
+        return redirect(url_for("index"))
+    return render_template("adicionar.html")
 
 if __name__ == "__main__":
-    with app.app_context():
-        db.create_all()
-    app.run(debug=True)
->>>>>>> 12a4e9b (Ajustes no projeto Minipedia)
+    from waitress import serve
+    port = int(os.environ.get("PORT", 5000))
+    serve(app, host="0.0.0.0", port=port)

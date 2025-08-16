@@ -1,25 +1,15 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 {% block content %}
-<div class="row justify-content-center">
-  <div class="col-md-6 col-lg-5">
-    <div class="card shadow-sm">
-      <div class="card-body">
-        <h2 class="h4 mb-3">Entrar</h2>
-        <form method="post">
-          <div class="mb-3">
-            <label class="form-label">E-mail</label>
-            <input type="email" class="form-control" name="email" required>
-          </div>
-          <div class="mb-3">
-            <label class="form-label">Senha</label>
-            <input type="password" class="form-control" name="password" required>
-          </div>
-          <button class="btn btn-primary">Entrar</button>
-          <a class="btn btn-link" href="{{ url_for('register') }}">Cadastrar</a>
-          <p class="text-muted mt-3 small">Admin de teste: admin@miniaturas.local / admin</p>
-        </form>
-      </div>
-    </div>
+<h2>Login</h2>
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" required>
   </div>
-</div>
+  <div class="mb-3">
+    <label class="form-label">Senha</label>
+    <input type="password" name="password" class="form-control" required>
+  </div>
+  <button type="submit" class="btn btn-primary">Entrar</button>
+</form>
 {% endblock %}
