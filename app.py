@@ -1,26 +1,24 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, request, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
+from flask_login import LoginManager, login_user, logout_user, login_required, UserMixin, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import os
 
 app = Flask(__name__)
-app.secret_key = os.environ.get("SECRET_KEY", "dev")
-
-# Configuração do banco (Postgres no Render)
-app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get("DATABASE_URL", "sqlite:///db.sqlite3").replace("postgres://", "postgresql://")
-app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+app.config['SECRET_KEY'] = 'minipedia-secret-key'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL", "sqlite:///miniaturas.db")
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = "login"
 
-# Models
+# ---------------- MODELOS ----------------
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(150), unique=True, nullable=False)
-    password = db.Column(db.String(200), nullable=False)
-    miniaturas = db.relationship("Colecao", backref="user", lazy=True)
+    password = db.Column(db.String(150), nullable=False)
+    miniaturas = db.relationship("Miniatura", secondary="colecao", back_populates="colecionadores")
 
 class Miniatura(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,27 +27,26 @@ class Miniatura(db.Model):
     cor = db.Column(db.String(50))
     ano = db.Column(db.String(10))
     tipo = db.Column(db.String(100))
-    lote = db.Column(db.String(100))
+    lote = db.Column(db.String(50))
     escala = db.Column(db.String(50))
     url_foto = db.Column(db.String(300))
+    colecionadores = db.relationship("User", secondary="colecao", back_populates="miniaturas")
 
 class Colecao(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
-    miniatura_id = db.Column(db.Integer, db.ForeignKey("miniatura.id"), nullable=False)
-    miniatura = db.relationship("Miniatura", backref="colecoes")
-
-# Inicializar banco automaticamente
-with app.app_context():
-    db.create_all()
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    miniatura_id = db.Column(db.Integer, db.ForeignKey("miniatura.id"))
+    __table_args__ = (db.UniqueConstraint("user_id", "miniatura_id", name="uq_user_miniatura"),)
 
 @login_manager.user_loader
 def load_user(user_id):
     return User.query.get(int(user_id))
 
+# ---------------- ROTAS ----------------
 @app.route("/")
 def index():
-    return render_template("index.html")
+    miniaturas = Miniatura.query.all()
+    return render_template("index.html", miniaturas=miniaturas)
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -57,13 +54,13 @@ def register():
         username = request.form.get("username")
         password = request.form.get("password")
         if User.query.filter_by(username=username).first():
-            flash("Usuário já existe!")
+            flash("Usuário já existe.", "danger")
             return redirect(url_for("register"))
         hashed_password = generate_password_hash(password, method="pbkdf2:sha256")
         new_user = User(username=username, password=hashed_password)
         db.session.add(new_user)
         db.session.commit()
-        flash("Conta criada com sucesso!")
+        flash("Cadastro realizado com sucesso!", "success")
         return redirect(url_for("login"))
     return render_template("register.html")
 
@@ -73,11 +70,11 @@ def login():
         username = request.form.get("username")
         password = request.form.get("password")
         user = User.query.filter_by(username=username).first()
-        if not user or not check_password_hash(user.password, password):
-            flash("Credenciais inválidas.")
-            return redirect(url_for("login"))
-        login_user(user)
-        return redirect(url_for("index"))
+        if user and check_password_hash(user.password, password):
+            login_user(user)
+            return redirect(url_for("index"))
+        else:
+            flash("Usuário ou senha inválidos.", "danger")
     return render_template("login.html")
 
 @app.route("/logout")
@@ -90,37 +87,40 @@ def logout():
 @login_required
 def add():
     if request.method == "POST":
-        nome = request.form.get("nome")
-        marca = request.form.get("marca")
-        cor = request.form.get("cor")
-        ano = request.form.get("ano")
-        tipo = request.form.get("tipo")
-        lote = request.form.get("lote")
-        escala = request.form.get("escala")
-        url_foto = request.form.get("url_foto")
-
-        mini = Miniatura(nome=nome, marca=marca, cor=cor, ano=ano,
-                         tipo=tipo, lote=lote, escala=escala, url_foto=url_foto)
+        mini = Miniatura(
+            nome=request.form.get("nome"),
+            marca=request.form.get("marca"),
+            cor=request.form.get("cor"),
+            ano=request.form.get("ano"),
+            tipo=request.form.get("tipo"),
+            lote=request.form.get("lote"),
+            escala=request.form.get("escala"),
+            url_foto=request.form.get("url_foto"),
+        )
         db.session.add(mini)
         db.session.commit()
-
-        # Impedir duplicados na coleção
-        if not Colecao.query.filter_by(user_id=current_user.id, miniatura_id=mini.id).first():
-            colecao = Colecao(user_id=current_user.id, miniatura_id=mini.id)
-            db.session.add(colecao)
-            db.session.commit()
-
-        flash("Miniatura adicionada à sua coleção!")
-        return redirect(url_for("colecao"))
-
+        flash("Miniatura adicionada com sucesso!", "success")
+        return redirect(url_for("index"))
     return render_template("add.html")
 
 @app.route("/colecao")
 @login_required
 def colecao():
-    colecao = Colecao.query.filter_by(user_id=current_user.id).all()
-    return render_template("colecao.html", colecao=colecao)
+    return render_template("colecao.html", miniaturas=current_user.miniaturas)
+
+@app.route("/add_to_colecao/<int:miniatura_id>")
+@login_required
+def add_to_colecao(miniatura_id):
+    mini = Miniatura.query.get_or_404(miniatura_id)
+    if mini not in current_user.miniaturas:
+        current_user.miniaturas.append(mini)
+        db.session.commit()
+        flash("Miniatura adicionada à sua coleção!", "success")
+    else:
+        flash("Essa miniatura já está na sua coleção!", "warning")
+    return redirect(url_for("colecao"))
 
 if __name__ == "__main__":
-    from waitress import serve
-    serve(app, host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True)

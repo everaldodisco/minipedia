@@ -1,21 +1,16 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
-<h2 class="mb-4">Miniaturas Disponíveis</h2>
+<h2>Miniaturas disponíveis</h2>
 <div class="row">
   {% for mini in miniaturas %}
   <div class="col-md-4">
-    <div class="card mb-4 shadow-sm">
-      <img src="{{ mini.url_foto or url_for('static', filename='img/exemplo.png') }}" class="card-img-top">
+    <div class="card mb-3">
+      <img src="{{ mini.url_foto or 'https://via.placeholder.com/200' }}" class="card-img-top">
       <div class="card-body">
         <h5 class="card-title">{{ mini.nome }}</h5>
-        <p class="card-text"><strong>Marca:</strong> {{ mini.marca }}<br>
-        <strong>Cor:</strong> {{ mini.cor }}<br>
-        <strong>Ano:</strong> {{ mini.ano }}<br>
-        <strong>Tipo:</strong> {{ mini.tipo }}<br>
-        <strong>Lote:</strong> {{ mini.lote }}<br>
-        <strong>Escala:</strong> {{ mini.escala }}</p>
+        <p class="card-text">{{ mini.marca }} - {{ mini.ano }}</p>
         {% if current_user.is_authenticated %}
-        <a href="{{ url_for('add_colecao', miniatura_id=mini.id) }}" class="btn btn-primary">Adicionar à coleção</a>
+          <a href="{{ url_for('add_to_colecao', miniatura_id=mini.id) }}" class="btn btn-primary">Adicionar à Coleção</a>
         {% endif %}
       </div>
     </div>

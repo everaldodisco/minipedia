@@ -1,22 +1,19 @@
-{% extends "base.html" %}
+{% extends 'base.html' %}
 {% block content %}
 <h2>Minha Coleção</h2>
 <div class="row">
-  {% for item in colecao %}
+  {% for mini in miniaturas %}
   <div class="col-md-4">
-    <div class="card mb-4 shadow-sm">
-      <img src="{{ item.miniatura.url_foto or url_for('static', filename='img/exemplo.png') }}" class="card-img-top">
+    <div class="card mb-3">
+      <img src="{{ mini.url_foto or 'https://via.placeholder.com/200' }}" class="card-img-top">
       <div class="card-body">
-        <h5 class="card-title">{{ item.miniatura.nome }}</h5>
-        <p class="card-text"><strong>Marca:</strong> {{ item.miniatura.marca }}<br>
-        <strong>Cor:</strong> {{ item.miniatura.cor }}<br>
-        <strong>Ano:</strong> {{ item.miniatura.ano }}<br>
-        <strong>Tipo:</strong> {{ item.miniatura.tipo }}<br>
-        <strong>Lote:</strong> {{ item.miniatura.lote }}<br>
-        <strong>Escala:</strong> {{ item.miniatura.escala }}</p>
+        <h5 class="card-title">{{ mini.nome }}</h5>
+        <p class="card-text">{{ mini.marca }} - {{ mini.ano }}</p>
       </div>
     </div>
   </div>
+  {% else %}
+  <p>Você ainda não adicionou nenhuma miniatura à sua coleção.</p>
   {% endfor %}
 </div>
 {% endblock %}
