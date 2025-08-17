@@ -1,46 +1,49 @@
-
 {% extends 'base.html' %}
 {% block content %}
-  <h2>Miniaturas</h2>
-  {% if not miniaturas %}
-    <p>Nenhuma miniatura cadastrada ainda.</p>
-  {% else %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th>ID</th><th>Nome</th><th>Marca</th><th>Ano</th><th>Escala</th><th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for m in miniaturas %}
-      <tr>
-        <td>{{ m.id }}</td>
-        <td>{{ m.nome }}</td>
-        <td>{{ m.marca }}</td>
-        <td>{{ m.ano }}</td>
-        <td>{{ m.escala }}</td>
-        <td class="actions">
-          {% if current_user.is_authenticated %}
-            {% if m.id in colecao_ids %}
-              <form action="{{ url_for('colecao_remover', mini_id=m.id) }}" method="post" class="inline">
-                <button type="submit">Remover da coleção</button>
-              </form>
-            {% else %}
-              <form action="{{ url_for('colecao_adicionar', mini_id=m.id) }}" method="post" class="inline">
-                <button type="submit">Adicionar à coleção</button>
-              </form>
-            {% endif %}
-          {% endif %}
-          {% if current_user.is_authenticated and current_user.role == 'admin' %}
-            <a class="btn" href="{{ url_for('editar', mini_id=m.id) }}">Editar</a>
-            <form action="{{ url_for('excluir', mini_id=m.id) }}" method="post" class="inline" onsubmit="return confirm('Excluir esta miniatura?');">
-              <button type="submit" class="danger">Excluir</button>
-            </form>
-          {% endif %}
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% endif %}
+<div class="container">
+    <h2 class="mb-4">Miniaturas Disponíveis</h2>
+    <a href="{{ url_for('adicionar') }}" class="btn btn-success mb-3">
+        <i class="fas fa-plus"></i> Cadastrar Nova Miniatura
+    </a>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Nome</th>
+                <th>Marca</th>
+                <th>Cor</th>
+                <th>Ano</th>
+                <th>Tipo</th>
+                <th>Lote</th>
+                <th>Escala</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mini in miniaturas %}
+            <tr>
+                <td><img src="{{ mini.url_foto }}" alt="foto" width="80"></td>
+                <td>{{ mini.nome }}</td>
+                <td>{{ mini.marca }}</td>
+                <td>{{ mini.cor }}</td>
+                <td>{{ mini.ano }}</td>
+                <td>{{ mini.tipo }}</td>
+                <td>{{ mini.lote }}</td>
+                <td>{{ mini.escala }}</td>
+                <td>
+                    <a href="{{ url_for('editar_miniatura', id=mini.id) }}" class="btn btn-warning btn-sm">
+                        <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <a href="{{ url_for('deletar_miniatura', id=mini.id) }}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash"></i> Excluir
+                    </a>
+                    <a href="{{ url_for('adicionar_colecao', id=mini.id) }}" class="btn btn-info btn-sm">
+                        <i class="fas fa-plus-circle"></i> Adicionar à Coleção
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

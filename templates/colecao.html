@@ -1,32 +1,40 @@
-
 {% extends 'base.html' %}
 {% block content %}
-  <h2>Minha coleção</h2>
-  {% if not miniaturas %}
-    <p>Você ainda não adicionou nenhuma miniatura à coleção.</p>
-  {% else %}
-  <table class="table">
-    <thead>
-      <tr>
-        <th>ID</th><th>Nome</th><th>Marca</th><th>Ano</th><th>Escala</th><th>Ações</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for m in miniaturas %}
-      <tr>
-        <td>{{ m.id }}</td>
-        <td>{{ m.nome }}</td>
-        <td>{{ m.marca }}</td>
-        <td>{{ m.ano }}</td>
-        <td>{{ m.escala }}</td>
-        <td class="actions">
-          <form action="{{ url_for('colecao_remover', mini_id=m.id) }}" method="post" class="inline">
-            <button type="submit" class="danger">Remover</button>
-          </form>
-        </td>
-      </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  {% endif %}
+<div class="container">
+    <h2 class="mb-4">Minha Coleção</h2>
+    <table class="table table-dark table-striped">
+        <thead>
+            <tr>
+                <th>Foto</th>
+                <th>Nome</th>
+                <th>Marca</th>
+                <th>Cor</th>
+                <th>Ano</th>
+                <th>Tipo</th>
+                <th>Lote</th>
+                <th>Escala</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mini in colecao %}
+            <tr>
+                <td><img src="{{ mini.url_foto }}" alt="foto" width="80"></td>
+                <td>{{ mini.nome }}</td>
+                <td>{{ mini.marca }}</td>
+                <td>{{ mini.cor }}</td>
+                <td>{{ mini.ano }}</td>
+                <td>{{ mini.tipo }}</td>
+                <td>{{ mini.lote }}</td>
+                <td>{{ mini.escala }}</td>
+                <td>
+                    <a href="{{ url_for('remover_colecao', id=mini.id) }}" class="btn btn-danger btn-sm">
+                        <i class="fas fa-times"></i> Remover
+                    </a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

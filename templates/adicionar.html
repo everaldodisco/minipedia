@@ -1,12 +1,43 @@
-
 {% extends 'base.html' %}
 {% block content %}
-  <h2>Cadastrar miniatura</h2>
-  <form method="post" class="form">
-    <label>Nome <input type="text" name="nome" required></label>
-    <label>Marca <input type="text" name="marca" required></label>
-    <label>Ano <input type="text" name="ano" maxlength="4" required></label>
-    <label>Escala <input type="text" name="escala" placeholder="1:64" required></label>
-    <button type="submit">Salvar</button>
-  </form>
+<div class="container">
+    <h2 class="mb-4">Cadastrar Miniatura</h2>
+    <form method="POST">
+        <div class="form-group mb-3">
+            <label>Nome</label>
+            <input type="text" name="nome" class="form-control" required>
+        </div>
+        <div class="form-group mb-3">
+            <label>Marca</label>
+            <input type="text" name="marca" class="form-control" required>
+        </div>
+        <div class="form-group mb-3">
+            <label>Cor</label>
+            <input type="text" name="cor" class="form-control" required>
+        </div>
+        <div class="form-group mb-3">
+            <label>Ano</label>
+            <input type="number" name="ano" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+            <label>Tipo</label>
+            <input type="text" name="tipo" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+            <label>Lote</label>
+            <input type="text" name="lote" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+            <label>Escala</label>
+            <input type="text" name="escala" class="form-control">
+        </div>
+        <div class="form-group mb-3">
+            <label>URL da Foto</label>
+            <input type="url" name="url_foto" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-save"></i> Salvar
+        </button>
+    </form>
+</div>
 {% endblock %}
