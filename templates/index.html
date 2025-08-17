@@ -1,21 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h1 class="mb-3">Coleção de Miniaturas</h1>
-  {% if current_user.is_authenticated and current_user.role == 'admin' %}
-    <a href="{{ url_for('adicionar') }}" class="btn btn-success mb-3">➕ Adicionar</a>
-  {% endif %}
-  <div class="row">
-    {% for m in miniaturas %}
-      <div class="col-md-4">
-        <div class="card mb-3">
-          <div class="card-body">
-            <h5 class="card-title">{{ m.nome }}</h5>
-            <p class="card-text">Marca: {{ m.marca }} | Ano: {{ m.ano }} | Escala: {{ m.escala }}</p>
-          </div>
+<h1>Miniaturas</h1>
+<div class="row">
+  {% for m in miniaturas %}
+    <div class="col-md-3">
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{ m.nome }}</h5>
+          <p class="card-text">{{ m.marca }} - {{ m.ano }} - Escala {{ m.escala }}</p>
         </div>
       </div>
-    {% else %}
-      <p>Nenhuma miniatura cadastrada.</p>
-    {% endfor %}
-  </div>
+    </div>
+  {% endfor %}
+</div>
 {% endblock %}
