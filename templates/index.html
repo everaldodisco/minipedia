@@ -1,12 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
-  <h1>Minipedia - Miniaturas</h1>
-  <ul>
-    {% for m in miniaturas %}
-      <li>{{ m.nome }} - {{ m.marca }} - {{ m.ano }} - {{ m.escala }}</li>
-    {% endfor %}
-  </ul>
-  {% if current_user.is_authenticated and current_user.role == 'admin' %}
-    <a href="{{ url_for('adicionar') }}">Adicionar nova miniatura</a>
+  <h1>Minis cadastradas</h1>
+  {% if miniaturas|length == 0 %}
+    <p class="muted">Nenhuma miniatura ainda. {% if current_user.role == 'admin' %}Use o botão "Adicionar".{% endif %}</p>
+  {% else %}
+    <div class="table-wrap">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Nome</th><th>Marca</th><th>Ano</th><th>Escala</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in miniaturas %}
+          <tr>
+            <td>{{ m.id }}</td>
+            <td>{{ m.nome }}</td>
+            <td>{{ m.marca }}</td>
+            <td>{{ m.ano }}</td>
+            <td>{{ m.escala }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
   {% endif %}
 {% endblock %}
