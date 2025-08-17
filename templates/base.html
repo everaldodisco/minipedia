@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="pt-br">
 <head>
@@ -8,14 +9,15 @@
 </head>
 <body>
   <header class="topbar">
-    <div class="container row space-between center">
-      <a class="brand" href="{{ url_for('index') }}">Minipedia</a>
-      <nav class="nav">
+    <div class="container">
+      <h1>Minipedia</h1>
+      <nav>
         {% if current_user.is_authenticated %}
+          <a href="{{ url_for('index') }}">Início</a>
+          <a href="{{ url_for('ver_colecao') }}">Minha coleção</a>
           {% if current_user.role == 'admin' %}
-            <a href="{{ url_for('adicionar') }}">Adicionar</a>
+            <a href="{{ url_for('adicionar') }}">Cadastrar mini</a>
           {% endif %}
-          <span class="muted">Olá, {{ current_user.username }}</span>
           <a href="{{ url_for('logout') }}">Sair</a>
         {% else %}
           <a href="{{ url_for('login') }}">Entrar</a>
@@ -28,11 +30,11 @@
   <main class="container">
     {% with messages = get_flashed_messages(with_categories=true) %}
       {% if messages %}
-        <div class="flash-stack">
+        <ul class="flash">
           {% for category, msg in messages %}
-            <div class="flash {{ category }}">{{ msg }}</div>
+            <li class="flash-{{ category }}">{{ msg }}</li>
           {% endfor %}
-        </div>
+        </ul>
       {% endif %}
     {% endwith %}
     {% block content %}{% endblock %}

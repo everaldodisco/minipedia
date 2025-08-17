@@ -1,28 +1,46 @@
+
 {% extends 'base.html' %}
 {% block content %}
-  <h1>Minis cadastradas</h1>
-  {% if miniaturas|length == 0 %}
-    <p class="muted">Nenhuma miniatura ainda. {% if current_user.role == 'admin' %}Use o botão "Adicionar".{% endif %}</p>
+  <h2>Miniaturas</h2>
+  {% if not miniaturas %}
+    <p>Nenhuma miniatura cadastrada ainda.</p>
   {% else %}
-    <div class="table-wrap">
-      <table class="table">
-        <thead>
-          <tr>
-            <th>ID</th><th>Nome</th><th>Marca</th><th>Ano</th><th>Escala</th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for m in miniaturas %}
-          <tr>
-            <td>{{ m.id }}</td>
-            <td>{{ m.nome }}</td>
-            <td>{{ m.marca }}</td>
-            <td>{{ m.ano }}</td>
-            <td>{{ m.escala }}</td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-    </div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th><th>Nome</th><th>Marca</th><th>Ano</th><th>Escala</th><th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in miniaturas %}
+      <tr>
+        <td>{{ m.id }}</td>
+        <td>{{ m.nome }}</td>
+        <td>{{ m.marca }}</td>
+        <td>{{ m.ano }}</td>
+        <td>{{ m.escala }}</td>
+        <td class="actions">
+          {% if current_user.is_authenticated %}
+            {% if m.id in colecao_ids %}
+              <form action="{{ url_for('colecao_remover', mini_id=m.id) }}" method="post" class="inline">
+                <button type="submit">Remover da coleção</button>
+              </form>
+            {% else %}
+              <form action="{{ url_for('colecao_adicionar', mini_id=m.id) }}" method="post" class="inline">
+                <button type="submit">Adicionar à coleção</button>
+              </form>
+            {% endif %}
+          {% endif %}
+          {% if current_user.is_authenticated and current_user.role == 'admin' %}
+            <a class="btn" href="{{ url_for('editar', mini_id=m.id) }}">Editar</a>
+            <form action="{{ url_for('excluir', mini_id=m.id) }}" method="post" class="inline" onsubmit="return confirm('Excluir esta miniatura?');">
+              <button type="submit" class="danger">Excluir</button>
+            </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
   {% endif %}
 {% endblock %}

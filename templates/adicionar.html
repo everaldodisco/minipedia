@@ -1,19 +1,12 @@
+
 {% extends 'base.html' %}
 {% block content %}
-  <h1>Adicionar miniatura</h1>
-  <form method="post" class="card form">
-    <label>Nome
-      <input type="text" name="nome" required>
-    </label>
-    <label>Marca
-      <input type="text" name="marca" required>
-    </label>
-    <label>Ano
-      <input type="text" name="ano" maxlength="4" required>
-    </label>
-    <label>Escala
-      <input type="text" name="escala" placeholder="1:64, 1:43, 1:18..." required>
-    </label>
+  <h2>Cadastrar miniatura</h2>
+  <form method="post" class="form">
+    <label>Nome <input type="text" name="nome" required></label>
+    <label>Marca <input type="text" name="marca" required></label>
+    <label>Ano <input type="text" name="ano" maxlength="4" required></label>
+    <label>Escala <input type="text" name="escala" placeholder="1:64" required></label>
     <button type="submit">Salvar</button>
   </form>
 {% endblock %}

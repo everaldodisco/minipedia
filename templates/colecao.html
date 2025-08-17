@@ -1,0 +1,32 @@
+
+{% extends 'base.html' %}
+{% block content %}
+  <h2>Minha coleção</h2>
+  {% if not miniaturas %}
+    <p>Você ainda não adicionou nenhuma miniatura à coleção.</p>
+  {% else %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>ID</th><th>Nome</th><th>Marca</th><th>Ano</th><th>Escala</th><th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in miniaturas %}
+      <tr>
+        <td>{{ m.id }}</td>
+        <td>{{ m.nome }}</td>
+        <td>{{ m.marca }}</td>
+        <td>{{ m.ano }}</td>
+        <td>{{ m.escala }}</td>
+        <td class="actions">
+          <form action="{{ url_for('colecao_remover', mini_id=m.id) }}" method="post" class="inline">
+            <button type="submit" class="danger">Remover</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% endif %}
+{% endblock %}
