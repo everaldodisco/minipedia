@@ -1,40 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <h2 class="mb-4">Minha Coleção</h2>
-    <table class="table table-dark table-striped">
-        <thead>
-            <tr>
-                <th>Foto</th>
-                <th>Nome</th>
-                <th>Marca</th>
-                <th>Cor</th>
-                <th>Ano</th>
-                <th>Tipo</th>
-                <th>Lote</th>
-                <th>Escala</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for mini in colecao %}
-            <tr>
-                <td><img src="{{ mini.url_foto }}" alt="foto" width="80"></td>
-                <td>{{ mini.nome }}</td>
-                <td>{{ mini.marca }}</td>
-                <td>{{ mini.cor }}</td>
-                <td>{{ mini.ano }}</td>
-                <td>{{ mini.tipo }}</td>
-                <td>{{ mini.lote }}</td>
-                <td>{{ mini.escala }}</td>
-                <td>
-                    <a href="{{ url_for('remover_colecao', id=mini.id) }}" class="btn btn-danger btn-sm">
-                        <i class="fas fa-times"></i> Remover
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<h2>Minha Coleção</h2>
+<div class="grid">
+{% for m in miniaturas %}
+  <div class="card">
+    <h3>{{ m.nome }} ({{ m.ano }})</h3>
+    <p>{{ m.marca }} - {{ m.cor }}</p>
+    {% if m.foto_url %}
+      <img src="{{ m.foto_url }}" alt="{{ m.nome }}" width="150">
+    {% endif %}
+    <a href="{{ url_for('remove_colecao', miniatura_id=m.id) }}">❌ Remover</a>
+  </div>
+{% endfor %}
 </div>
 {% endblock %}

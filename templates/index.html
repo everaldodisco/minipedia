@@ -1,49 +1,19 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <h2 class="mb-4">Miniaturas Disponíveis</h2>
-    <a href="{{ url_for('adicionar') }}" class="btn btn-success mb-3">
-        <i class="fas fa-plus"></i> Cadastrar Nova Miniatura
-    </a>
-    <table class="table table-dark table-striped">
-        <thead>
-            <tr>
-                <th>Foto</th>
-                <th>Nome</th>
-                <th>Marca</th>
-                <th>Cor</th>
-                <th>Ano</th>
-                <th>Tipo</th>
-                <th>Lote</th>
-                <th>Escala</th>
-                <th>Ações</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for mini in miniaturas %}
-            <tr>
-                <td><img src="{{ mini.url_foto }}" alt="foto" width="80"></td>
-                <td>{{ mini.nome }}</td>
-                <td>{{ mini.marca }}</td>
-                <td>{{ mini.cor }}</td>
-                <td>{{ mini.ano }}</td>
-                <td>{{ mini.tipo }}</td>
-                <td>{{ mini.lote }}</td>
-                <td>{{ mini.escala }}</td>
-                <td>
-                    <a href="{{ url_for('editar_miniatura', id=mini.id) }}" class="btn btn-warning btn-sm">
-                        <i class="fas fa-edit"></i> Editar
-                    </a>
-                    <a href="{{ url_for('deletar_miniatura', id=mini.id) }}" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash"></i> Excluir
-                    </a>
-                    <a href="{{ url_for('adicionar_colecao', id=mini.id) }}" class="btn btn-info btn-sm">
-                        <i class="fas fa-plus-circle"></i> Adicionar à Coleção
-                    </a>
-                </td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+<h2>Miniaturas Disponíveis</h2>
+<div class="grid">
+{% for m in miniaturas %}
+  <div class="card">
+    <h3>{{ m.nome }} ({{ m.ano }})</h3>
+    <p><b>Marca:</b> {{ m.marca }} | <b>Cor:</b> {{ m.cor }}</p>
+    <p><b>Tipo:</b> {{ m.tipo }} | <b>Lote:</b> {{ m.lote }} | <b>Escala:</b> {{ m.escala }}</p>
+    {% if m.foto_url %}
+      <img src="{{ m.foto_url }}" alt="{{ m.nome }}" width="150">
+    {% endif %}
+    {% if current_user.is_authenticated %}
+      <a href="{{ url_for('add_colecao', miniatura_id=m.id) }}">➕ Adicionar à Coleção</a>
+    {% endif %}
+  </div>
+{% endfor %}
 </div>
 {% endblock %}
